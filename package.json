@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "cross-env NODE_ENV=development node server.js",
     "start": "cross-env NODE_ENV=production node server.js"
   },
@@ -18,5 +18,8 @@
     "express": "^4.17.1",
     "express-list-endpoints": "^5.0.0",
     "mongoose": "^5.12.13"
+  },
+  "devDependencies": {
+    "jest": "^27.0.4"
   }
 }
