@@ -10,5 +10,4 @@ module.exports = async () => {
   })
   CUSTOM_MONGO_DEBUG === 'true' && mongoose.set('debug', true)
   console.log(`${process.env.CUSTOM_MONGO_DB} Connected`)
-  return
 }
