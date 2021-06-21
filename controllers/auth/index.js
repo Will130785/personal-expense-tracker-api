@@ -29,12 +29,19 @@ module.exports.login = async (req, res, next) => {
               jwt.sign(payload, key, {
                 expiresIn: 604800
               }, (err, token) => {
-                res.status(200).json({
-                  success: true,
-                  user: user,
-                  token: `Bearer ${token}`,
-                  msg: 'You are now logged in'
-                })
+                if (err) {
+                  res.json({
+                    success: false,
+                    msg: 'There was an error logging you in'
+                  })
+                } else {
+                  res.json({
+                    success: true,
+                    user: user,
+                    token: `Bearer ${token}`,
+                    msg: 'You are now logged in'
+                  })
+                }
               })
             } else {
               console.log('username taken')
@@ -82,25 +89,39 @@ module.exports.register = async (req, res, next) => {
 
           // Hash password
           bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) throw err
-              newUser.password = hash
-              newUser.save()
-                .then(user => {
-                  return res.status(200).json({
-                    success: true,
-                    msg: 'User is now registered'
+            if (err) {
+              res.json({
+                success: false,
+                msg: 'Error processing password'
+              })
+            } else {
+              bcrypt.hash(newUser.password, salt, (err, hash) => {
+                if (err) {
+                  res.json({
+                    success: false,
+                    msg: 'Error processing password'
                   })
-                })
-            })
+                } else {
+                  newUser.password = hash
+                  newUser.save()
+                    .then(user => {
+                      return res.status(200).json({
+                        success: true,
+                        msg: 'User is now registered'
+                      })
+                    })
+                }
+              })
+            }
           })
         })
     }
   } catch (err) {
     console.log(err)
-    res.status(400).json({
+    res.json({
       msg: 'Error with request',
-      error: err
+      error: err,
+      success: false
     })
   }
 }
